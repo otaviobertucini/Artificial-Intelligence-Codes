@@ -16,6 +16,7 @@ public class Agente implements PontosCardeais {
     /* referência ao ambiente para poder atuar no mesmo*/
     Model model;
     Estado estAtu; // guarda o estado atual (posição atual do agente)
+    int current_action;
     int plan[];
     double custo;
     static int ct = -1;
@@ -25,6 +26,8 @@ public class Agente implements PontosCardeais {
         
         // Posiciona o agente fisicamente no ambiente na posicao inicial
         model.setPos(8,0);
+
+        estAtu = null;
     }
     
      /**
@@ -36,8 +39,14 @@ public class Agente implements PontosCardeais {
         ct++;
         // @todo T1: perceber por meio do sensor a posicao atual e imprimir
         // @todo T1: a cada acao escolher uma acao {N, NE, L, SE, S, SO, O, NO}
-        executarIr(N); //executar a acao escolhida
-        
+//        executarIr(N); //executar a acao escolhida
+
+        Estado pos = sensorPosicao();
+
+        System.out.println("X: " + pos.getCol() + " Y: " + pos.getLin());
+
+        executarIr(N);
+
         return 1; // Se retornar -1, encerra o agente
     }
 
@@ -46,7 +55,9 @@ public class Agente implements PontosCardeais {
     * @param direcao um dos pontos cardeais
     */
     public int executarIr(int direcao) {
-        //@todo T1 - invocar metodo do Model - atuar no ambiente 
+        //@todo T1 - invocar metodo do Model - atuar no ambiente
+
+        this.model.ir(direcao);
         return 1; // deu certo
     }
 
@@ -58,7 +69,10 @@ public class Agente implements PontosCardeais {
      */
     public Estado sensorPosicao() {
         //@todo T1 - sensor deve ler a posicao do agente no labirinto (environment)
-        return new Estado(0,0);
+
+        int[] pos = this.model.lerPos();
+
+        return new Estado(pos[0], pos[1]);
     }
     
 }

@@ -45,8 +45,8 @@ public class Main {
         // o estado do labirinto porque ocupa passa a ocupar nova posicao)
         
         System.out.println("\n*** Inicio do ciclo de raciocinio do agente ***\n");
-        while (ag.deliberar() != -1) {  
-            model.desenhar(); 
+        while (ag.deliberar() != -1) {
+            model.desenhar();
         }
     }
 }
