@@ -6,6 +6,7 @@
 package sistema;
 
 import ambiente.*;
+import problema.Problema;
 
 /**
  *

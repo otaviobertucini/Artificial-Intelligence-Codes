@@ -103,6 +103,7 @@ public class Problema implements PontosCardeais {
      * @return 
      */
     public int[] acoesPossiveis(Estado est) {
+        //N, NE. L, SE, S, SO, O, NO
         int acoes[] = {1,1,1,1,1,1,1,1};
 
         // testa se pode ir para o N, NE ou NO sem sair do limite do labirinto

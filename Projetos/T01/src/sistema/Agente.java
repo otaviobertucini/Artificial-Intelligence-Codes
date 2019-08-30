@@ -20,6 +20,7 @@ public class Agente implements PontosCardeais {
     int plan[];
     double custo;
     static int ct = -1;
+    Problema prob;
            
     public Agente(Model m) {
         this.model = m; 
@@ -28,6 +29,16 @@ public class Agente implements PontosCardeais {
         model.setPos(8,0);
 
         estAtu = null;
+
+        //Cria o problema
+        prob = new Problema();
+        prob.criarLabirinto(9, 9);
+        prob.defEstIni(8, 0);
+        prob.defEstObj(2, 8);
+
+        plan = new int[]{N, N, N, N, L, L, L, L, L, L, L, L, N, N};
+        custo = 0.0;
+        current_action = 0;
     }
     
      /**
@@ -39,13 +50,30 @@ public class Agente implements PontosCardeais {
         ct++;
         // @todo T1: perceber por meio do sensor a posicao atual e imprimir
         // @todo T1: a cada acao escolher uma acao {N, NE, L, SE, S, SO, O, NO}
-//        executarIr(N); //executar a acao escolhida
 
-        Estado pos = sensorPosicao();
+        estAtu = sensorPosicao();
+        if(prob.testeObjetivo(estAtu)){
+            System.out.println( "CHEGUEI" );
+            return -1;
+        }
 
-        System.out.println("X: " + pos.getCol() + " Y: " + pos.getLin());
+        executarIr(plan[current_action]);
 
-        executarIr(N);
+        custo += prob.obterCustoAcao(estAtu, plan[current_action], estAtu);
+
+        System.out.println("X: " + estAtu.getCol() + " Y: " + estAtu.getLin());
+        int[] poss = prob.acoesPossiveis(estAtu);
+//        System.out.println( "Ações possíveis: " + poss[0] + poss[1] + poss[2] + poss[3] + poss[4] + poss[5] + poss[6]
+//                + poss[7]);
+        System.out.print( "Ações possíveis: {" );
+        for(int i = 0; i < poss.length; i++){
+            System.out.print(" " + poss[i]);
+        }
+        System.out.println( "}" );
+        System.out.println( "Ação escolhida: " + plan[current_action] );
+        System.out.println( "Custo até o momento: " + custo );
+
+        current_action++;
 
         return 1; // Se retornar -1, encerra o agente
     }
