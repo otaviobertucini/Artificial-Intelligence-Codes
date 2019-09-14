@@ -116,4 +116,12 @@ public class TreeNode {
         printSubTreeRec(this, 1);
 
     }
+
+    /**retorna o custo que essa ação leva*/
+    public float cost_action(){
+        if(action % 2 == 0){
+            return 1;
+        }
+        return (float) 1.5;
+    }
 }

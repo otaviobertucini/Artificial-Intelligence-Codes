@@ -7,6 +7,8 @@ import arvore.fnComparator;
 import comuns.*;
 import static comuns.PontosCardeais.*;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  *
@@ -39,6 +41,37 @@ public class Agente implements PontosCardeais {
         plan = new int[]{N, N, N, N, L, L, L, L, L, L, L, L, N, N};
         custo = 0.0;
         current_action = 0;
+    }
+
+    public int[] uniform_cost(){
+
+        int[] made_plan = new int [8];
+        int level = 0;
+        int acc_cost = 0;
+        Estado virtual_state;
+        TreeNode curr_node;
+
+        TreeNode root = new TreeNode(null);
+        root.setState(estAtu);
+        root.setHn(0);
+//        curr_node = root;
+
+        List<TreeNode> border = new ArrayList<TreeNode>();
+        border.add(root);
+
+        List<TreeNode> explored = new ArrayList<TreeNode>();
+
+        while(!border.isEmpty()){
+            curr_node = border.remove(0);
+            explored.add(curr_node);
+            int[] poss_states = prob.acoesPossiveis(curr_node.getState());
+            for(int i = 0; i < poss_states.length; i++){
+                Estado new_state = prob.suc(curr_node.getState(), poss_states[i]);
+                TreeNode new_node = new TreeNode(curr_node);
+            }
+        }
+
+        return made_plan;
     }
     
      /**
@@ -103,4 +136,19 @@ public class Agente implements PontosCardeais {
         return new Estado(pos[0], pos[1]);
     }
     
+}
+
+class NodeComparator implements Comparator<TreeNode>{
+
+    @Override
+    public int compare(TreeNode a, TreeNode b){
+        if(a.cost_action() < b.cost_action()){
+            return -1;
+        }
+        if(a.cost_action() > b.cost_action()){
+            return 1;
+        }
+        return 0;
+    }
+
 }
