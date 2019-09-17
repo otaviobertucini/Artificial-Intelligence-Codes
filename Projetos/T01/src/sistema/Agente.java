@@ -227,10 +227,10 @@ class NodeComparator implements Comparator<TreeNode>{
 
     @Override
     public int compare(TreeNode a, TreeNode b){
-        if(a.getGn() < b.getGn()){
+        if(a.getFn() < b.getFn()){
             return -1;
         }
-        if(a.getGn() > b.getGn()){
+        if(a.getFn() > b.getFn()){
             return 1;
         }
         return 0;
