@@ -6,9 +6,8 @@ import arvore.TreeNode;
 import arvore.fnComparator;
 import comuns.*;
 import static comuns.PontosCardeais.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+
+import java.util.*;
 
 /**
  *
@@ -49,29 +48,109 @@ public class Agente implements PontosCardeais {
         int level = 0;
         int acc_cost = 0;
         Estado virtual_state;
-        TreeNode curr_node;
 
         TreeNode root = new TreeNode(null);
-        root.setState(estAtu);
+        root.setState(prob.estIni);
         root.setHn(0);
-//        curr_node = root;
+        root.setGn(0);
 
         List<TreeNode> border = new ArrayList<TreeNode>();
         border.add(root);
 
-        List<TreeNode> explored = new ArrayList<TreeNode>();
+        List<Estado> explored = new ArrayList<Estado>();
+        explored.add(root.getState());
+        TreeNode curr_node;
 
-        while(!border.isEmpty()){
+        int counter = 0;
+
+        while(counter < 3){
             curr_node = border.remove(0);
-            explored.add(curr_node);
+            explored.add(curr_node.getState());
+
             int[] poss_states = prob.acoesPossiveis(curr_node.getState());
+            poss_states = check_wall(poss_states, curr_node.getState());
+
             for(int i = 0; i < poss_states.length; i++){
-                Estado new_state = prob.suc(curr_node.getState(), poss_states[i]);
-                TreeNode new_node = new TreeNode(curr_node);
+                if(prob.testeObjetivo(curr_node.getState())){
+                    return made_plan;
+                }
+                if(poss_states[i] == 1){
+                    Estado new_state = prob.suc(curr_node.getState(), i);
+                    if(!explored.contains(new_state)){
+                        explored.add(new_state);
+                        TreeNode new_node = curr_node.addChild();
+                        new_node.setState(new_state);
+                        new_node.setGn(curr_node.getGn() + prob.obterCustoAcao(curr_node.getState(), i, new_state));
+                        new_node.setAction(i);
+                        border.add(new_node);
+//                        for(int j = 0; i < border.size(); i++){
+//                            System.out.println(border.get(j).gerarStr());
+//                        }
+//                        return made_plan;
+                    }
+                }
             }
+            // EXPLORED STATES MUST BE CORRECTLY IGNORED
+            Collections.sort(border, new NodeComparator());
+            System.out.println("---------------------------");
+            for (int j = 0; j < border.size(); j++) {
+                System.out.println(border.get(j).gerarStr());
+            }
+            System.out.println("---------------------------");
+            counter++;
         }
 
         return made_plan;
+    }
+
+    public int[] check_wall(int[] actions, Estado est){
+        int[] acoes = actions;
+
+        // testa se ha paredes no entorno l, c
+        int l = est.getLin();
+        int c = est.getCol();
+
+        // testa se ha parede na direcao N
+        if (acoes[0] != -1 && model.labir.parede[l - 1][c] == 1) {
+            acoes[0] = -1;
+        }
+
+        // testa se ha parede na direcao NE
+        if (acoes[1] != -1 && model.labir.parede[l - 1][c + 1] == 1) {
+            acoes[1] = -1;
+        }
+
+        // testa se ha parede na direcao l
+        if (acoes[2] != -1 && model.labir.parede[l][c + 1] == 1) {
+            acoes[2] = -1;
+        }
+
+        // testa se ha parede na direcao SE
+        if (acoes[3] != -1 && model.labir.parede[l + 1][c + 1] == 1) {
+            acoes[3] = -1;
+        }
+
+        // testa se ha parede na direcao S
+        if (acoes[4] != -1 && model.labir.parede[l + 1][c] == 1) {
+            acoes[4] = -1;
+        }
+
+        // testa se ha parede na direcao SO
+        if (acoes[5] != -1 && model.labir.parede[l + 1][c - 1] == 1) {
+            acoes[5] = -1;
+        }
+
+        // testa se ha parede na direcao O
+        if (acoes[6] != -1 && model.labir.parede[l][c - 1] == 1) {
+            acoes[6] = -1;
+        }
+
+        // testa se ha parede na direcao NO
+        if (acoes[7] != -1 && model.labir.parede[l - 1][c - 1] == 1) {
+            acoes[7] = -1;
+        }
+
+        return acoes;
     }
     
      /**

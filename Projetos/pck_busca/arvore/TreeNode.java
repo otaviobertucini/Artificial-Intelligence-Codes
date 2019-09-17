@@ -16,7 +16,7 @@ public class TreeNode {
     private final List<TreeNode> children = new ArrayList<>();
     private int depth=0; // armazena a profundidade do nó
     private float gn;  // g(n) custo acumulado até o nó n
-    private float hn;  // h(n) heurística a partir do nó n
+    private float hn=0;  // h(n) heurística a partir do nó n
     private Estado st;  // estado par <linha, coluna>
     private int   action; // acao que levou ao estado 
 
