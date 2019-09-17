@@ -37,17 +37,13 @@ public class Agente implements PontosCardeais {
         prob.defEstIni(8, 0);
         prob.defEstObj(2, 8);
 
-        plan = new int[]{N, N, N, N, L, L, L, L, L, L, L, L, N, N};
         custo = 0.0;
         current_action = 0;
     }
 
     public int[] uniform_cost(){
 
-        int[] made_plan = new int [8];
-        int level = 0;
-        int acc_cost = 0;
-        Estado virtual_state;
+        ArrayList<Integer> made_plan = new ArrayList<Integer>();
 
         TreeNode root = new TreeNode(null);
         root.setState(prob.estIni);
@@ -60,10 +56,10 @@ public class Agente implements PontosCardeais {
         List<Estado> explored = new ArrayList<Estado>();
         explored.add(root.getState());
         TreeNode curr_node;
+        boolean solved = false;
+        TreeNode solution = null;
 
-        int counter = 0;
-
-        while(counter < 3){
+        while( !border.isEmpty() && !solved ){
             curr_node = border.remove(0);
             explored.add(curr_node.getState());
 
@@ -72,35 +68,41 @@ public class Agente implements PontosCardeais {
 
             for(int i = 0; i < poss_states.length; i++){
                 if(prob.testeObjetivo(curr_node.getState())){
-                    return made_plan;
+                    solved = true;
+                    solution = curr_node;
+                    break;
                 }
                 if(poss_states[i] == 1){
                     Estado new_state = prob.suc(curr_node.getState(), i);
-                    if(!explored.contains(new_state)){
+                    if( !isExplored(explored, new_state) ){
                         explored.add(new_state);
                         TreeNode new_node = curr_node.addChild();
                         new_node.setState(new_state);
                         new_node.setGn(curr_node.getGn() + prob.obterCustoAcao(curr_node.getState(), i, new_state));
                         new_node.setAction(i);
                         border.add(new_node);
-//                        for(int j = 0; i < border.size(); i++){
-//                            System.out.println(border.get(j).gerarStr());
-//                        }
-//                        return made_plan;
                     }
                 }
             }
-            // EXPLORED STATES MUST BE CORRECTLY IGNORED
             Collections.sort(border, new NodeComparator());
-            System.out.println("---------------------------");
-            for (int j = 0; j < border.size(); j++) {
-                System.out.println(border.get(j).gerarStr());
-            }
-            System.out.println("---------------------------");
-            counter++;
         }
 
-        return made_plan;
+        TreeNode aux = solution;
+        while( aux.getParent() != null ){
+            made_plan.add(0, aux.getAction());
+            aux = aux.getParent();
+        }
+
+        return made_plan.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public boolean isExplored(List<Estado> list, Estado x){
+        for(int i = 0; i < list.size(); i++){
+            if( x.igualAo(list.get(i)) ){
+                return true;
+            }
+        }
+        return false;
     }
 
     public int[] check_wall(int[] actions, Estado est){
@@ -157,7 +159,11 @@ public class Agente implements PontosCardeais {
      * Agente escolhe qual acao será executada em um ciclo de raciocinio.
      * Observar que o agente executa somente uma acao por ciclo.
      */
-    public int deliberar() {               
+    public int deliberar() {
+        if(plan == null){
+            plan = uniform_cost();
+            return 1;
+        }
         //  contador de acoes
         ct++;
         // @todo T1: perceber por meio do sensor a posicao atual e imprimir
@@ -174,13 +180,13 @@ public class Agente implements PontosCardeais {
         custo += prob.obterCustoAcao(estAtu, plan[current_action], estAtu);
 
         System.out.println("X: " + estAtu.getCol() + " Y: " + estAtu.getLin());
-        int[] poss = prob.acoesPossiveis(estAtu);
+//        int[] poss = prob.acoesPossiveis(estAtu);
 //        System.out.println( "Ações possíveis: " + poss[0] + poss[1] + poss[2] + poss[3] + poss[4] + poss[5] + poss[6]
 //                + poss[7]);
-        System.out.print( "Ações possíveis: {" );
-        for(int i = 0; i < poss.length; i++){
-            System.out.print(" " + poss[i]);
-        }
+//        System.out.print( "Ações possíveis: {" );
+//        for(int i = 0; i < poss.length; i++){
+//            System.out.print(" " + poss[i]);
+//        }
         System.out.println( "}" );
         System.out.println( "Ação escolhida: " + plan[current_action] );
         System.out.println( "Custo até o momento: " + custo );
@@ -221,10 +227,10 @@ class NodeComparator implements Comparator<TreeNode>{
 
     @Override
     public int compare(TreeNode a, TreeNode b){
-        if(a.cost_action() < b.cost_action()){
+        if(a.getGn() < b.getGn()){
             return -1;
         }
-        if(a.cost_action() > b.cost_action()){
+        if(a.getGn() > b.getGn()){
             return 1;
         }
         return 0;

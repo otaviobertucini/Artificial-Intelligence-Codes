@@ -46,9 +46,13 @@ public class Main {
         // o estado do labirinto porque ocupa passa a ocupar nova posicao)
         
         System.out.println("\n*** Inicio do ciclo de raciocinio do agente ***\n");
-        ag.uniform_cost();
-//        while (ag.deliberar() != -1) {
-//            model.desenhar();
+//        int[] plan = ag.uniform_cost();
+//        for(int i = 0; i < plan.length; i++){
+//            System.out.println(plan[i]);
 //        }
+
+        while (ag.deliberar() != -1) {
+            model.desenhar();
+        }
     }
 }
