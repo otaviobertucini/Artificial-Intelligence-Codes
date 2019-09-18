@@ -8,6 +8,8 @@ import comuns.*;
 import static comuns.PontosCardeais.*;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  *
@@ -41,13 +43,32 @@ public class Agente implements PontosCardeais {
         current_action = 0;
     }
 
-    public int[] uniform_cost(){
+    public Double uniform_cost_hn(ArrayList<Estado> list){
+        return (double) 0;
+    }
+
+    public Double heuristc_one(ArrayList<Estado> list){
+        if(list == null){
+            return (double) 0;
+        }
+
+//        System.out.println("in heuristc 1");
+//        System.out.println(list.get(0).getString());
+//        System.out.println(list.get(1).getString());
+
+        double cost = (Math.abs(list.get(0).getCol() - list.get(1).getCol()) +
+                Math.abs(list.get(0).getLin() - list.get(1).getLin()));
+
+        return cost;
+    }
+
+    public int[] uniform_cost(Function<ArrayList<Estado>, Double> hn_method){
 
         ArrayList<Integer> made_plan = new ArrayList<Integer>();
 
         TreeNode root = new TreeNode(null);
         root.setState(prob.estIni);
-        root.setHn(0);
+        root.setHn(hn_method.apply(null).floatValue());
         root.setGn(0);
 
         List<TreeNode> border = new ArrayList<TreeNode>();
@@ -59,8 +80,13 @@ public class Agente implements PontosCardeais {
         boolean solved = false;
         TreeNode solution = null;
 
+        ArrayList<Estado> compare = new ArrayList<Estado>();
+        int n_nodes = 1;
+        int n_explored = 1;
+
         while( !border.isEmpty() && !solved ){
             curr_node = border.remove(0);
+            n_explored++;
             explored.add(curr_node.getState());
 
             int[] poss_states = prob.acoesPossiveis(curr_node.getState());
@@ -73,18 +99,29 @@ public class Agente implements PontosCardeais {
                     break;
                 }
                 if(poss_states[i] == 1){
+                    n_nodes++;
                     Estado new_state = prob.suc(curr_node.getState(), i);
                     if( !isExplored(explored, new_state) ){
                         explored.add(new_state);
                         TreeNode new_node = curr_node.addChild();
                         new_node.setState(new_state);
                         new_node.setGn(curr_node.getGn() + prob.obterCustoAcao(curr_node.getState(), i, new_state));
+                        compare.add(curr_node.getState());
+                        compare.add(prob.estObj);
+                        new_node.setHn(hn_method.apply(compare).floatValue());
+                        compare.clear();
                         new_node.setAction(i);
                         border.add(new_node);
                     }
                 }
             }
             Collections.sort(border, new NodeComparator());
+
+//            System.out.println("---------------");
+//            for(int i = 0; i < border.size(); i++){
+//                System.out.println(border.get(i).gerarStr());
+//            }
+//            System.out.println("---------------");
         }
 
         TreeNode aux = solution;
@@ -92,6 +129,8 @@ public class Agente implements PontosCardeais {
             made_plan.add(0, aux.getAction());
             aux = aux.getParent();
         }
+        System.out.println("Nós explorados: " + n_explored);
+        System.out.println("Nós criados: " + n_nodes);
 
         return made_plan.stream().mapToInt(Integer::intValue).toArray();
     }
@@ -161,7 +200,11 @@ public class Agente implements PontosCardeais {
      */
     public int deliberar() {
         if(plan == null){
-            plan = uniform_cost();
+
+//            Function<ArrayList<Estado>, Double> uniform_hn = this::uniform_cost_hn;
+            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristc_one;
+
+            plan = uniform_cost(uniform_hn);
             return 1;
         }
         //  contador de acoes
