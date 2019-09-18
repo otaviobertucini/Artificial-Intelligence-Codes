@@ -76,7 +76,7 @@ public class Agente implements PontosCardeais {
         return cost;
     }
 
-    public int[] uniform_cost(Function<ArrayList<Estado>, Double> hn_method){
+    public int[] search(Function<ArrayList<Estado>, Double> hn_method){
 
         ArrayList<Integer> made_plan = new ArrayList<Integer>();
 
@@ -130,12 +130,6 @@ public class Agente implements PontosCardeais {
                 }
             }
             Collections.sort(border, new NodeComparator());
-
-            System.out.println("---------------");
-            for(int i = 0; i < border.size(); i++){
-                System.out.println(border.get(i).gerarStr());
-            }
-            System.out.println("---------------");
         }
 
         TreeNode aux = solution;
@@ -212,15 +206,19 @@ public class Agente implements PontosCardeais {
      * Agente escolhe qual acao será executada em um ciclo de raciocinio.
      * Observar que o agente executa somente uma acao por ciclo.
      */
-    public int deliberar() {
+    public int deliberar(String heuristic) {
         if(plan == null){
 
-//            Function<ArrayList<Estado>, Double> uniform_hn = this::uniform_cost_hn;
-//            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristc_one;
-            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristic_two;
+            Function<ArrayList<Estado>, Double> uniform_hn = this::uniform_cost_hn;
+            if(heuristic.charAt(0) == '1'){
+                uniform_hn = this::heuristc_one;
+            }
+            if(heuristic.charAt(0) == '2'){
+                uniform_hn = this::heuristic_two;
+            }
 
-            plan = uniform_cost(uniform_hn);
-            return -1;
+            plan = search(uniform_hn);
+            return 1;
         }
         //  contador de acoes
         ct++;
@@ -238,13 +236,6 @@ public class Agente implements PontosCardeais {
         custo += prob.obterCustoAcao(estAtu, plan[current_action], estAtu);
 
         System.out.println("X: " + estAtu.getCol() + " Y: " + estAtu.getLin());
-//        int[] poss = prob.acoesPossiveis(estAtu);
-//        System.out.println( "Ações possíveis: " + poss[0] + poss[1] + poss[2] + poss[3] + poss[4] + poss[5] + poss[6]
-//                + poss[7]);
-//        System.out.print( "Ações possíveis: {" );
-//        for(int i = 0; i < poss.length; i++){
-//            System.out.print(" " + poss[i]);
-//        }
         System.out.println( "}" );
         System.out.println( "Ação escolhida: " + plan[current_action] );
         System.out.println( "Custo até o momento: " + custo );
