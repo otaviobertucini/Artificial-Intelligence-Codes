@@ -62,6 +62,20 @@ public class Agente implements PontosCardeais {
         return cost;
     }
 
+    public Double heuristic_two(ArrayList<Estado> list){
+        if(list == null){
+            return (double) 0;
+        }
+
+        int x1 = list.get(0).getCol();
+        int y1 = list.get(0).getLin();
+        int x2 = list.get(1).getCol();
+        int y2 = list.get(1).getLin();
+
+        double cost = Math.sqrt( Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2) );
+        return cost;
+    }
+
     public int[] uniform_cost(Function<ArrayList<Estado>, Double> hn_method){
 
         ArrayList<Integer> made_plan = new ArrayList<Integer>();
@@ -117,11 +131,11 @@ public class Agente implements PontosCardeais {
             }
             Collections.sort(border, new NodeComparator());
 
-//            System.out.println("---------------");
-//            for(int i = 0; i < border.size(); i++){
-//                System.out.println(border.get(i).gerarStr());
-//            }
-//            System.out.println("---------------");
+            System.out.println("---------------");
+            for(int i = 0; i < border.size(); i++){
+                System.out.println(border.get(i).gerarStr());
+            }
+            System.out.println("---------------");
         }
 
         TreeNode aux = solution;
@@ -202,10 +216,11 @@ public class Agente implements PontosCardeais {
         if(plan == null){
 
 //            Function<ArrayList<Estado>, Double> uniform_hn = this::uniform_cost_hn;
-            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristc_one;
+//            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristc_one;
+            Function<ArrayList<Estado>, Double> uniform_hn = this::heuristic_two;
 
             plan = uniform_cost(uniform_hn);
-            return 1;
+            return -1;
         }
         //  contador de acoes
         ct++;
