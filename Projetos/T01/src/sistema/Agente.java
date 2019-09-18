@@ -37,7 +37,7 @@ public class Agente implements PontosCardeais {
         prob = new Problema();
         prob.criarLabirinto(9, 9);
         prob.defEstIni(8, 0);
-        prob.defEstObj(2, 8);
+        prob.defEstObj(8, 1);
 
         custo = 0.0;
         current_action = 0;
@@ -51,10 +51,6 @@ public class Agente implements PontosCardeais {
         if(list == null){
             return (double) 0;
         }
-
-//        System.out.println("in heuristc 1");
-//        System.out.println(list.get(0).getString());
-//        System.out.println(list.get(1).getString());
 
         double cost = (Math.abs(list.get(0).getCol() - list.get(1).getCol()) +
                 Math.abs(list.get(0).getLin() - list.get(1).getLin()));
@@ -97,6 +93,8 @@ public class Agente implements PontosCardeais {
         ArrayList<Estado> compare = new ArrayList<Estado>();
         int n_nodes = 1;
         int n_explored = 1;
+        int max_size = 1;
+        int yet_explored = 0;
 
         while( !border.isEmpty() && !solved ){
             curr_node = border.remove(0);
@@ -127,9 +125,19 @@ public class Agente implements PontosCardeais {
                         new_node.setAction(i);
                         border.add(new_node);
                     }
+                    else{
+                        yet_explored++;
+                    }
                 }
             }
             Collections.sort(border, new NodeComparator());
+            if(border.size() > max_size){
+                max_size = border.size();
+            }
+        }
+
+        if(!solved){
+            return null;
         }
 
         TreeNode aux = solution;
@@ -139,6 +147,8 @@ public class Agente implements PontosCardeais {
         }
         System.out.println("Nós explorados: " + n_explored);
         System.out.println("Nós criados: " + n_nodes);
+        System.out.println("Tamanho memória: " + max_size);
+        System.out.println("Já explorado: " + yet_explored);
 
         return made_plan.stream().mapToInt(Integer::intValue).toArray();
     }
@@ -218,6 +228,10 @@ public class Agente implements PontosCardeais {
             }
 
             plan = search(uniform_hn);
+            if(plan == null){
+                System.out.println("Nenhuma solução encontrada!");
+                return -1;
+            }
             return 1;
         }
         //  contador de acoes

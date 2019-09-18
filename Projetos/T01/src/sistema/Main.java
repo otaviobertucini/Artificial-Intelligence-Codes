@@ -33,7 +33,7 @@ public class Main {
         // seta a posição inicial do agente no ambiente - nao interfere no 
         // raciocinio do agente, somente no amibente simulado
         model.setPos(8, 0);
-        model.setObj(2, 8);
+        model.setObj(8, 1);
         
         // Cria um agente
         Agente ag = new Agente(model);
