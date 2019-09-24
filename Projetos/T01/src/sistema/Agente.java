@@ -136,6 +136,10 @@ public class Agente implements PontosCardeais {
             }
         }
 
+        System.out.println("Nós explorados: " + n_explored);
+        System.out.println("Nós criados: " + n_nodes);
+        System.out.println("Tamanho memória: " + max_size);
+        System.out.println("Já explorado: " + yet_explored);
         if(!solved){
             return null;
         }
@@ -145,10 +149,7 @@ public class Agente implements PontosCardeais {
             made_plan.add(0, aux.getAction());
             aux = aux.getParent();
         }
-        System.out.println("Nós explorados: " + n_explored);
-        System.out.println("Nós criados: " + n_nodes);
-        System.out.println("Tamanho memória: " + max_size);
-        System.out.println("Já explorado: " + yet_explored);
+
 
         return made_plan.stream().mapToInt(Integer::intValue).toArray();
     }
