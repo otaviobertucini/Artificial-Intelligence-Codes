@@ -11,7 +11,8 @@ public class Operadores {
     /**
      * Seleciona a quantidade pedida de cromossomos pelo método da roleta
      * @param fitness float valor de fitness dos cromossomos candidatos a seleção
-     * @param qtdCromossomos quantos cromossomos devem ser selecionados para 
+     * param qtdCromossomos quantos cromossomos devem ser selecionados para     *
+     *
      * criar nova geração
      * @return vetor de int contendo o índice dos cromossomos selecionados. Um
      * cromossomo pode aparecer mais de uma vez. Suponha que temos 5 cromossomos:<br>
@@ -144,6 +145,7 @@ public class Operadores {
         Random gerador = new Random();
         float r = gerador.nextFloat();
         if (r > pCross) {
+            System.out.println("r = " + r);
             return;
         }
 

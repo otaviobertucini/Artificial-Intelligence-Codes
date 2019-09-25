@@ -140,6 +140,17 @@ public class Cromossomo implements ConfigAG {
      * Preencher um cromossomo com valores iniciais (depende do problema)
      */
     public void inicializarCromossomo() {
-        // INICIALIZAR CADA GENE DO CROMOSSOMO COM UM VALOR
+
+        Random rand = new Random();
+        int n;
+
+        for(int i = 0; i < NUM_GENES; i++) {
+
+            n = rand.nextInt(8);
+            Bits.setGroupLong(i, this.bits, NUM_LOCUS, (long) Math.pow(2, n));
+
+        }
+
+//        System.out.println(Bits.printBinCSV(this.bits, NUM_GENES, NUM_BITS));
     }
 }

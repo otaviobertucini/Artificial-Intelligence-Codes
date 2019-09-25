@@ -18,7 +18,7 @@ public interface ConfigAG {
      * tamanho da população = quantidade de indivíduos ou cromossomos
      * OBRIGATORIAMENTE UM NÚMERO PAR >= 2
      */
-    public static final int TAM_POP = 1;
+    public static final int TAM_POP = 4;
     /**
      * critério de parada: máximo de gerações a serem criadas
      */
@@ -26,11 +26,11 @@ public interface ConfigAG {
     /**
      * probabilidade de crossover entre 2 individuos: tipicamente [70%,80%]
      */
-    public static final float PROB_CROSS = (float) 0.1;
+    public static final float PROB_CROSS = (float) 0.8;
     /**
      * probabilidade de mutação de um alelo: deve ser inferior a 5%
      */
-    public static final float PROB_MUT = (float) 0.1;
+    public static final float PROB_MUT = (float) 0.04;
 
     /**
      * penalização: escolhe se é fitness com penalização (caso true). Caso
@@ -40,11 +40,11 @@ public interface ConfigAG {
     /**
      * tamanho do cromossomo em bits
      */
-    public static final int NUM_GENES = 1; // Linha de cada rainha (1 por coluna)
+    public static final int NUM_GENES = 8; // Linha de cada rainha (1 por coluna)
     /**
      * numero de locus por gene
      */
-    public static final int NUM_LOCUS = 1; // 4 bits
+    public static final int NUM_LOCUS = 8; // 4 bits
     /**
      * numero de bits necessarios por cromossomo
      */

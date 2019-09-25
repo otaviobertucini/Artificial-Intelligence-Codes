@@ -7,6 +7,7 @@ package ag;
 
 import static ag.Operadores.selecionarPorRoleta;
 import agNRainhas.AGNRainhas;
+import bits.Bits;
 
 /**
  * Esta classe é a principal. Contém as configurações para execução do
@@ -145,11 +146,16 @@ public class AG implements ConfigAG {
                 b = j + TAM_POP + 1;
                 crom[a] = crom[sel[j]].clonar();   // clona individuo 1
                 crom[b] = crom[sel[j + 1]].clonar(); // clona individuo 2
-                System.out.println("ENTREI");
 
                 // cruzamos os pais (clonados), modificando-os 
                 // e, assim geramos os filhos a e b
                 Operadores.crossoverUmPonto(crom[a].bits, crom[b].bits, PROB_CROSS);
+
+//                System.out.println("--------------");
+//                System.out.println(Bits.printBinCSV(crom[a].bits, NUM_GENES, NUM_GENES));
+//                System.out.println(Bits.printBinCSV(crom[b].bits, NUM_GENES, NUM_GENES));
+//                System.out.println("--------------");
+
                 j += 2;
             }
             // mutamos os filhos e recalculamos fitness

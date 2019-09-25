@@ -42,6 +42,9 @@ public class AGNRainhas implements ConfigAG {
                     ctOtimo++;
                 }
             }
+            else{
+                System.out.println("melhor = " + melhor);
+            }
             ctExec++;
             ctTotalFitness += Cromossomo.ctChamadasFitness;
             System.out.println(ctExec + "," + Cromossomo.ctChamadasFitness + "," + melhor.imprimirCSV());
