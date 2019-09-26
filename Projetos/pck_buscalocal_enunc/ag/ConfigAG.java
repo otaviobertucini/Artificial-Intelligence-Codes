@@ -40,11 +40,11 @@ public interface ConfigAG {
     /**
      * tamanho do cromossomo em bits
      */
-    public static final int NUM_GENES = 4; // Linha de cada rainha (1 por coluna)
+    public static final int NUM_GENES = 8; // Linha de cada rainha (1 por coluna)
     /**
      * numero de locus por gene
      */
-    public static final int NUM_LOCUS = 4; // 4 bits
+    public static final int NUM_LOCUS = 8; // 4 bits
     /**
      * numero de bits necessarios por cromossomo
      */

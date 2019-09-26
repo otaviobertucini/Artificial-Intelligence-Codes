@@ -7,6 +7,8 @@ package ag;
 
 import agNRainhas.AGNRainhas;
 import bits.Bits;
+
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -103,16 +105,54 @@ public class Cromossomo implements ConfigAG {
 
     /**
      * FAZER
+     * SUBSTITUI OS BITS A MAIS
      */
     private void reparar() {
- 
+
+        int count;
+        ArrayList<Integer> index = new ArrayList<Integer>();
+        for(int i = 0; i < NUM_GENES; i++){
+
+            BitSet group = Bits.getGroup(i, this.bits, 8);
+            count = 0;
+            for(int j = 0; j < NUM_LOCUS; j++){
+                BitSet comp = Bits.getGroup(j, this.bits, 1);
+                if( Bits.getGroupLong(0, comp, 1) == 1 ){
+                    index.add(j);
+                }
+            }
+
+            for(int j = 1; j < index.size(); j++){
+                Bits.setGroupLong(index.get(j), this.bits, 1, 0);
+            }
+
+        }
+
     }
 
     /**
      * FAZER
      */
     private int infactivel() {
-        
+
+        int count;
+        for(int i = 0; i < NUM_GENES; i++){
+
+            BitSet group = Bits.getGroup(i, this.bits, 8);
+            count = 0;
+            for(int j = 0; j < NUM_LOCUS; j++){
+                BitSet comp = Bits.getGroup(j, this.bits, 1);
+                if( Bits.getGroupLong(0, comp, 1) == 1 ){
+                    count++;
+                }
+            }
+
+            if(count >= 1){
+                return 1;
+            }
+
+        }
+
         return -1;
     }
 
@@ -144,7 +184,6 @@ public class Cromossomo implements ConfigAG {
             for(int d = i; d < NUM_BITS - 1; d = d + NUM_LOCUS + 1){
                 if( Bits.compare( one, Bits.getGroup(d, this.bits, 1)) == 0 ){
                     equal++;
-                    System.out.println("ENTREI DEIREITA " + i);
                 }
             }
 
@@ -155,11 +194,9 @@ public class Cromossomo implements ConfigAG {
                 BitSet comp = Bits.getGroup(index, this.bits, 1);
                 if( Bits.compare( one, comp) == 0 ){
                     equal++;
-                    System.out.println("ENTREI ESQUERDA " + i + " " + index + " " + Bits.getGroupLong(index, this.bits, 1));
                 }
             }
 
-            System.out.println("equal = " + equal);
             if(equal <= 1){
                 fitness++;
             }
