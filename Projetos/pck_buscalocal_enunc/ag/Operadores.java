@@ -1,5 +1,7 @@
 package ag;
 
+import bits.Bits;
+
 import java.util.Random;
 import java.util.BitSet;
 
@@ -7,11 +9,11 @@ import java.util.BitSet;
  * Operadores para Algoritmos Geneticos Canonicos: crossover simples, 
  * crossover de 2 pontos, mutação e seleção por roleta.
  */
-public class Operadores {
+public class Operadores implements ConfigAG {
     /**
      * Seleciona a quantidade pedida de cromossomos pelo método da roleta
      * @param fitness float valor de fitness dos cromossomos candidatos a seleção
-     * param qtdCromossomos quantos cromossomos devem ser selecionados para     *
+     * @param qtdCromossomos quantos cromossomos devem ser selecionados para     *
      *
      * criar nova geração
      * @return vetor de int contendo o índice dos cromossomos selecionados. Um
@@ -86,7 +88,6 @@ public class Operadores {
      * Os dois pontos são aleatórios.
      * @param c1 bitset representando o cromossomo 1
      * @param c2 bitset representando o cromossomo 2
-     * @param tamBitSet tamanho dos bitsets (assume-se que são iguais)
      * @param pCross probalidade de ocorrer crossover entre dois cromossomos;
      * tipicamente entre 0.7 e 0.8
      */
@@ -152,8 +153,10 @@ public class Operadores {
         // sorteia um ponto de crossover
         int p;
         // nao faz crossover na pos 0, pois seria um swap completo
-        p = gerador.nextInt(Cromossomo.NUM_BITS - 1) + 1; 
-        //System.out.println("ponto de crossover = " + p);
+        p = gerador.nextInt(Cromossomo.NUM_BITS - 1) + 1;
+//        System.out.println("p = " + p);
+//        System.out.println(Bits.printBinCSV(c1, NUM_GENES, NUM_BITS));
+//        System.out.println(Bits.printBinCSV(c2, NUM_GENES, NUM_BITS));
         trocarMaterialGenetico(c1, c2, p, Cromossomo.NUM_BITS);
     }
     /**
@@ -167,7 +170,10 @@ public class Operadores {
     private static void trocarMaterialGenetico(BitSet c1, BitSet c2, int p1, int p2) {
         // [p1, p2[: crossover entre ponto 1 (inclusive) e ponto 2 exclusivo
         BitSet alelosC1 = c1.get(p1, p2);
+//        System.out.println("c1 cut: " + Bits.printBinCSV(alelosC1, p2 - p1, p2 - p1));
+
         BitSet alelosC2 = c2.get(p1, p2);
+//        System.out.println("c2 cut: " + Bits.printBinCSV(alelosC2, p2 - p1, p2 - p1));
 
         for (int i = p1, j = 0; i < p2; i++, j++) {
             c1.set(i, alelosC2.get(j));

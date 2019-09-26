@@ -146,25 +146,36 @@ public class AG implements ConfigAG {
                 b = j + TAM_POP + 1;
                 crom[a] = crom[sel[j]].clonar();   // clona individuo 1
                 crom[b] = crom[sel[j + 1]].clonar(); // clona individuo 2
+//                System.out.println("j: " + Bits.printBinCSV(crom[sel[j]].bits, NUM_GENES, NUM_BITS));
+//                System.out.println("j + 1: " + Bits.printBinCSV(crom[sel[j + 1]].bits, NUM_GENES, NUM_BITS));
 
                 // cruzamos os pais (clonados), modificando-os 
                 // e, assim geramos os filhos a e b
                 Operadores.crossoverUmPonto(crom[a].bits, crom[b].bits, PROB_CROSS);
+//                System.out.println("a: " + Bits.printBinCSV(crom[a].bits, NUM_GENES, NUM_BITS));
+//                System.out.println("b: " + Bits.printBinCSV(crom[b].bits, NUM_GENES, NUM_BITS));
 
 //                System.out.println("--------------");
-//                System.out.println(Bits.printBinCSV(crom[a].bits, NUM_GENES, NUM_GENES));
-//                System.out.println(Bits.printBinCSV(crom[b].bits, NUM_GENES, NUM_GENES));
+//                System.out.println(Bits.printBinCSV(crom[a].bits, NUM_GENES, NUM_BITS));
+//                System.out.println(Bits.printBinCSV(crom[b].bits, NUM_GENES, NUM_BITS));
 //                System.out.println("--------------");
 
                 j += 2;
             }
+
+//            for(int i = 0; i < crom.length; i++){
+//                System.out.println(Bits.printBinCSV(crom[i].bits, NUM_GENES, NUM_BITS));
+//            }
+
             // mutamos os filhos e recalculamos fitness
             for (int i = TAM_POP; i < 2 * TAM_POP; i++) {
                 Operadores.mutar(crom[i].bits, AG.PROB_MUT);
 
                 // UM DOS DOIS: reparacao XOR penalizacao
                 // fitness com reparação de indivíduos infactíveis
-                crom[i].calcularFitness();
+
+                //DESCOMENTAR ISSO AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//                crom[i].calcularFitness();
 
             }
 

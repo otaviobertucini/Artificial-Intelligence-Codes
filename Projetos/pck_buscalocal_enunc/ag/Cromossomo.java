@@ -132,8 +132,39 @@ public class Cromossomo implements ConfigAG {
             return;
         }
 
+        System.out.println("------------");
+        System.out.println("Calcular fitness: \n" + Bits.printBinCSV(this.bits, NUM_LOCUS, NUM_BITS));
         // CALCULAR FITNESS PARA SITUACOES NORMAIS
-        // this.fitness = <CALCULO> 
+        this.fitness = 0;
+        BitSet zero = Bits.convert(0);
+        BitSet one = Bits.convert(1);
+        for(int i = 0; i < NUM_LOCUS; i++){
+            //Diagonal direita
+            int equal = 0;
+            for(int d = i; d < NUM_BITS - 1; d = d + NUM_LOCUS + 1){
+                if( Bits.compare( one, Bits.getGroup(d, this.bits, 1)) == 0 ){
+                    equal++;
+                    System.out.println("ENTREI DEIREITA " + i);
+                }
+            }
+
+            //Diagonal esquerda
+            int index = i;
+            for(int e = i; e > 0; e--){
+                index +=  NUM_LOCUS - 1;
+                BitSet comp = Bits.getGroup(index, this.bits, 1);
+                if( Bits.compare( one, comp) == 0 ){
+                    equal++;
+                    System.out.println("ENTREI ESQUERDA " + i + " " + index + " " + Bits.getGroupLong(index, this.bits, 1));
+                }
+            }
+
+            System.out.println("equal = " + equal);
+            if(equal <= 1){
+                fitness++;
+            }
+        }
+
     }
 
     /**
@@ -150,6 +181,8 @@ public class Cromossomo implements ConfigAG {
             Bits.setGroupLong(i, this.bits, NUM_LOCUS, (long) Math.pow(2, n));
 
         }
+
+        calcularFitness();
 
 //        System.out.println(Bits.printBinCSV(this.bits, NUM_GENES, NUM_BITS));
     }
