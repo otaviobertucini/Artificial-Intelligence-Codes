@@ -37,7 +37,7 @@ public class Agente implements PontosCardeais {
         prob = new Problema();
         prob.criarLabirinto(9, 9);
         prob.defEstIni(8, 0);
-        prob.defEstObj(8, 1);
+        prob.defEstObj(2, 8);
 
         custo = 0.0;
         current_action = 0;

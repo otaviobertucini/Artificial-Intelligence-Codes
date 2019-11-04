@@ -27,6 +27,12 @@ antepassado(abraham, bart) :-
 	progenitor(abraham, homer),
 	progenitor(homer, bart).
 
+% resposta 1 
+mae(X) :- fem(X), progenitor(X, Y).
+
+% resposta 2
+irma(X, Y) :- fem(X), fem(Y), progenitor(Z, X), progenitor(Z, Y).
+
 % abraham Simpson eh progenitor de homerSimpson
 progenitor(abraham, homer).
 progenitor(homer,  bart).
