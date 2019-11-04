@@ -107,5 +107,10 @@ public class Labirinto {
             }
         }
     }
+
+    public boolean isOponente(int i, int j){
+        Oponente o = oponentes[i][j];
+        return o.gentil;
+    }
     
 }

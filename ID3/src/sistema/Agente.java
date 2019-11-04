@@ -7,6 +7,7 @@ import problema.*;
 import comuns.*;
 import static comuns.PontosCardeais.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -96,18 +97,52 @@ public class Agente implements PontosCardeais {
         System.out.println("--- Mente do Agente ---");
         System.out.println("  Estado atual  : " + estAtu.getLin() + "," + estAtu.getCol());
         System.out.println("  Passo do plano: " + (ct + 1) + " de " + plan.length + " ação=" + acao[plan[ct]] + "\n");
-        executarIr(plan[ct]);
+        float a;
         if(plan[ct] % 2 == 0){
-            custo += 1.0;
+            a = (float) 1.0;
         }
         else{
-            custo += 1.5;
+            a = (float) 1.5;
         }
+
+        boolean emp = empurrar(0);
+        if(emp){
+            if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
+                a *= 3;
+            }
+            else{
+                a *= 4;
+            }
+        }
+        else{
+            if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
+                a *= 6;
+            }
+            else{
+                a *= 1;
+            }
+        }
+        custo += a;
+        executarIr(plan[ct]);
 
         // atualiza o estado atual baseando-se apenas nas suas crenças e
         // na função sucessora (não faz leitura do sensor de posição!!!)
         estAtu = prob.suc(estAtu, plan[ct]);
         return 1;
+    }
+
+    public boolean empurrar(int func){
+
+        Random rand = new Random();
+
+        if(func == 0){
+            if(rand.nextInt(1) == 1){
+                return true;
+            }
+            return false;
+        }
+
+        return true;
     }
 
     /**
