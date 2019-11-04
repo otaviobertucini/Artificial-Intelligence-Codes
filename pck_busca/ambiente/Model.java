@@ -1,6 +1,12 @@
 package ambiente;
 import comuns.PontosCardeais;
 import comuns.Labirinto;
+import problema.Oponente;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**Model implementa um ambiente na forma de um labirinto com paredes e com um
  * agente. A indexação da posição do agente é feita sempre por um 
@@ -160,4 +166,56 @@ public class Model implements PontosCardeais {
         this.pos[0] = lin;
         this.pos[1] = col;
     }
+
+    public void iniciarOponentes() throws IOException {
+
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = Files.newBufferedReader(
+                Paths.get("/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/datasets/Oponentes.arff"));
+
+        String line;
+        int tam = labir.tam_labir - labir.count_parede;
+        int count = 0;
+        boolean dente = false;
+        boolean gentil = true;
+        int cor = 0;
+        boolean loop = true;
+        while(loop){
+            line = br.readLine();
+            if(line.startsWith("@")){
+                continue;
+            }
+
+            String[] data = line.split(",", 0);
+            if(data[2].matches("afiados")){
+                dente = true;
+            }
+            else{
+                dente = false;
+            }
+
+            if(data[3].matches("escura")){
+                cor = 0;
+            }
+            else if(data[3].matches("clara")){
+                cor = 1;
+            }
+            else{
+                cor = 2;
+            }
+
+            if(data[4].matches("N")){
+                gentil = false;
+            }
+            else{
+                gentil = true;
+            }
+            Oponente o = new Oponente(Float.parseFloat(data[0]), Float.parseFloat(data[1]), dente, cor, gentil);
+            loop = labir.porOponente(o);
+
+            count++;
+        }
+
+    }
+
 }

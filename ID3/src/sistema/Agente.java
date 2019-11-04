@@ -19,7 +19,7 @@ public class Agente implements PontosCardeais {
     Problema prob;
     Estado estAtu; // guarda o estado atual (posição atual do agente)
     int plan[];
-    double custo;
+    double custo = 0.0;
     static int ct = -1;
 
     public Agente(Model m) {
@@ -28,14 +28,14 @@ public class Agente implements PontosCardeais {
         prob.criarLabirinto(9, 9);
         prob.crencaLabir.porParedeVertical(0, 1, 0);
         prob.crencaLabir.porParedeVertical(0, 0, 1);
-        prob.crencaLabir.porParedeVertical(5, 8, 1);
-        prob.crencaLabir.porParedeVertical(5, 5, 2);
-        prob.crencaLabir.porParedeVertical(8, 8, 2);
+        prob.crencaLabir.porParedeVertical(6, 7, 2);
+        prob.crencaLabir.porParedeVertical(2, 2, 4);
+        prob.crencaLabir.porParedeVertical(7, 7, 1);
         prob.crencaLabir.porParedeHorizontal(4, 7, 0);
-        prob.crencaLabir.porParedeHorizontal(7, 7, 1);
-        prob.crencaLabir.porParedeHorizontal(3, 5, 2);
+//        prob.crencaLabir.porParedeHorizontal(7, 7, 1);
+//        prob.crencaLabir.porParedeHorizontal(3, 5, 2);
         prob.crencaLabir.porParedeHorizontal(3, 5, 3);
-        prob.crencaLabir.porParedeHorizontal(7, 7, 3);
+//        prob.crencaLabir.porParedeHorizontal(7, 7, 3);
         prob.crencaLabir.porParedeVertical(6, 7, 4);
         prob.crencaLabir.porParedeVertical(5, 6, 5);
         prob.crencaLabir.porParedeVertical(5, 7, 7);
@@ -85,6 +85,7 @@ public class Agente implements PontosCardeais {
         // atingiu o estado objetivo então para
         if (prob.testeObjetivo(estAtu)) {
             System.out.println("!!! ATINGIU ESTADO OBJETIVO !!!");
+            System.out.println("Custo total: " + custo);
             return -1;
         }
         //algo deu errado, chegou ao final do plano sem atingir o objetivo
@@ -96,6 +97,13 @@ public class Agente implements PontosCardeais {
         System.out.println("  Estado atual  : " + estAtu.getLin() + "," + estAtu.getCol());
         System.out.println("  Passo do plano: " + (ct + 1) + " de " + plan.length + " ação=" + acao[plan[ct]] + "\n");
         executarIr(plan[ct]);
+        if(plan[ct] % 2 == 0){
+            custo += 1.0;
+        }
+        else{
+            custo += 1.5;
+        }
+
         // atualiza o estado atual baseando-se apenas nas suas crenças e
         // na função sucessora (não faz leitura do sensor de posição!!!)
         estAtu = prob.suc(estAtu, plan[ct]);
