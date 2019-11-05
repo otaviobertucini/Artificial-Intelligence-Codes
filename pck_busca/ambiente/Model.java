@@ -194,17 +194,17 @@ public class Model implements PontosCardeais {
                 dente = false;
             }
 
-            if(data[3].matches("escura")){
+            if(data[3].equals("escura")){
                 cor = 0;
             }
-            else if(data[3].matches("clara")){
+            else if(data[3].equals("clara")){
                 cor = 1;
             }
             else{
                 cor = 2;
             }
 
-            if(data[4].matches("N")){
+            if(data[4].equals("N")){
                 gentil = false;
             }
             else{

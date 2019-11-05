@@ -105,7 +105,7 @@ public class Agente implements PontosCardeais {
             a = (float) 1.5;
         }
 
-        boolean emp = empurrar(0, estAtu.getLin(), estAtu.getCol());
+        boolean emp = empurrar(1, estAtu.getLin(), estAtu.getCol());
         if(emp){
             System.out.println("empurra");
         }
@@ -129,6 +129,7 @@ public class Agente implements PontosCardeais {
             }
         }
         custo += a;
+        System.out.println("custo = " + a);
         executarIr(plan[ct]);
 
         // atualiza o estado atual baseando-se apenas nas suas crenças e
@@ -153,7 +154,36 @@ public class Agente implements PontosCardeais {
         //J48
         Oponente o = model.labir.getOponente(lin, col);
 
-        return true;
+        System.out.println(o.massa + "," + o.altura + "," + o.dente + "," + o.olhos + "," + o.gentil);
+
+        if(o.dente){
+
+            //dente afiado
+            if(o.massa <= 99.99){
+                if(o.altura <= 1.79){
+                    return true;
+                }
+                return false;
+            }
+            else{
+                return true;
+            }
+
+        }
+        else{
+            //dente não afiado
+            if(o.olhos == 0 || o.olhos == 1){
+                return false;
+            }
+            if(o.massa <= 100.06){
+                if(o.altura <= 1.8){
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+
     }
 
     /**

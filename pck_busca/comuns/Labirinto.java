@@ -110,7 +110,7 @@ public class Labirinto {
 
     public boolean isOponente(int i, int j){
         Oponente o = oponentes[i][j];
-        return o.gentil;
+        return !o.gentil;
     }
 
     public Oponente getOponente(int lin, int col){
