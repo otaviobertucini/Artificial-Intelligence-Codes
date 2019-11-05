@@ -112,5 +112,9 @@ public class Labirinto {
         Oponente o = oponentes[i][j];
         return o.gentil;
     }
+
+    public Oponente getOponente(int lin, int col){
+        return oponentes[lin][col];
+    }
     
 }

@@ -105,7 +105,13 @@ public class Agente implements PontosCardeais {
             a = (float) 1.5;
         }
 
-        boolean emp = empurrar(0);
+        boolean emp = empurrar(0, estAtu.getLin(), estAtu.getCol());
+        if(emp){
+            System.out.println("empurra");
+        }
+        else{
+            System.out.println("nao empurra");
+        }
         if(emp){
             if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
                 a *= 3;
@@ -131,16 +137,21 @@ public class Agente implements PontosCardeais {
         return 1;
     }
 
-    public boolean empurrar(int func){
+    public boolean empurrar(int func, int lin, int col){
 
-        Random rand = new Random();
-
+        //baseline
         if(func == 0){
-            if(rand.nextInt(1) == 1){
+            Random rand = new Random();
+            int r = rand.nextInt(2);
+            System.out.println("rand = " + r);
+            if(r == 1){
                 return true;
             }
             return false;
         }
+
+        //J48
+        Oponente o = model.labir.getOponente(lin, col);
 
         return true;
     }
@@ -206,7 +217,7 @@ public class Agente implements PontosCardeais {
      * hn1 é a distância em colunas do estado passado como argumento até o
      * estado objetivo.
      *
-     * @param estado: estado para o qual se quer calcular o valor de hn
+     * @param est: estado para o qual se quer calcular o valor de hn
      */
     private float hn1(Estado est) {
         return (float) Math.abs(est.getCol() - prob.estObj.getCol());
@@ -217,7 +228,7 @@ public class Agente implements PontosCardeais {
      * hn2 é a distância Euclidiana do estado passado como argumento até o
      * estado objetivo (calculada por Pitágoras).
      *
-     * @param estado: estado para o qual se quer calcular o valor de hn
+     * @param est: estado para o qual se quer calcular o valor de hn
      */
     private float hn2(Estado est) {
         double distCol = Math.abs(est.getCol() - prob.estObj.getCol());
