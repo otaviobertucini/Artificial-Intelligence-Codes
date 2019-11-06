@@ -167,24 +167,30 @@ public class Model implements PontosCardeais {
         this.pos[1] = col;
     }
 
-    public void iniciarOponentes() throws IOException {
+    public void iniciarOponentes(int linha) throws IOException {
 
         StringBuilder sb = new StringBuilder();
         BufferedReader br = Files.newBufferedReader(
                 Paths.get("/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/datasets/Oponentes.arff"));
 
         String line;
-        int tam = labir.tam_labir - labir.count_parede;
         int count = 0;
         boolean dente = false;
         boolean gentil = true;
         int cor = 0;
         boolean loop = true;
-        while(loop){
+
+        while(count < linha - 1){
             line = br.readLine();
-            if(line.startsWith("@")){
-                continue;
-            }
+            count++;
+        }
+
+        System.out.println("linha = " + linha);
+
+        while(loop){
+//            System.out.println("entrei");
+            line = br.readLine();
+//            System.out.println("line = " + line);
 
             String[] data = line.split(",", 0);
             if(data[2].matches("afiados")){
@@ -212,8 +218,8 @@ public class Model implements PontosCardeais {
             }
             Oponente o = new Oponente(Float.parseFloat(data[0]), Float.parseFloat(data[1]), dente, cor, gentil);
             loop = labir.porOponente(o);
+//            System.out.println("loop = " + loop);
 
-            count++;
         }
 
     }

@@ -116,5 +116,18 @@ public class Labirinto {
     public Oponente getOponente(int lin, int col){
         return oponentes[lin][col];
     }
+
+    public void resetLabir(){
+        oponent_count = 0;
+        lin_oponente = 0;
+        col_oponente = 0;
+    }
+
+    public boolean isParede(int lin, int col){
+        if(parede[lin][col] == 1){
+            return true;
+        }
+        return false;
+    }
     
 }

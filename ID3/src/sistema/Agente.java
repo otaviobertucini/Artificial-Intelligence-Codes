@@ -20,7 +20,7 @@ public class Agente implements PontosCardeais {
     Problema prob;
     Estado estAtu; // guarda o estado atual (posição atual do agente)
     int plan[];
-    double custo = 0.0;
+    public double custo = 0.0;
     static int ct = -1;
 
     public Agente(Model m) {
@@ -50,16 +50,26 @@ public class Agente implements PontosCardeais {
         this.estAtu = prob.estIni;
 
         // Define o estado objetivo
-        prob.defEstObj(2, 7);
+        Random rand = new Random();
+        int lin = rand.nextInt(9);
+        int col = rand.nextInt(9);
+        while(model.labir.isParede(lin, col)){
+            lin = rand.nextInt(9);
+            col = rand.nextInt(9);
+        }
+        prob.defEstObj(lin, col);
+
+        custo = 0.0;
+        ct = -1;
 
     }
 
     public void printPlano() {
-        System.out.println("--- PLANO ---");
-        for (int i = 0; i < plan.length; i++) {
-            System.out.print(acao[plan[i]] + ">");
-        }
-        System.out.println("FIM\n\n");
+//        System.out.println("--- PLANO ---");
+//        for (int i = 0; i < plan.length; i++) {
+//            System.out.print(acao[plan[i]] + ">");
+//        }
+//        System.out.println("FIM\n\n");
     }
 
     /**
@@ -67,7 +77,7 @@ public class Agente implements PontosCardeais {
      * calcula um plano por meio de um algoritmo de busca. A partir da 2a
      * chamada, executa uma ação por vez do plano calculado.
      */
-    public int deliberar() {
+    public int deliberar(int type) {
         // realiza busca na 1a. chamada para elaborar um plano
         if (ct == -1) {
             plan = buscaCheapestFirst(2); //0=c.unif.; 1=A* com colunas; 2=A*=dist. Euclidiana
@@ -85,8 +95,8 @@ public class Agente implements PontosCardeais {
 
         // atingiu o estado objetivo então para
         if (prob.testeObjetivo(estAtu)) {
-            System.out.println("!!! ATINGIU ESTADO OBJETIVO !!!");
-            System.out.println("Custo total: " + custo);
+//            System.out.println("!!! ATINGIU ESTADO OBJETIVO !!!");
+//            System.out.println("Custo total: " + custo);
             return -1;
         }
         //algo deu errado, chegou ao final do plano sem atingir o objetivo
@@ -94,9 +104,9 @@ public class Agente implements PontosCardeais {
             System.out.println("### ERRO: plano chegou ao fim, mas objetivo não foi atingido");
             return -1;
         }
-        System.out.println("--- Mente do Agente ---");
-        System.out.println("  Estado atual  : " + estAtu.getLin() + "," + estAtu.getCol());
-        System.out.println("  Passo do plano: " + (ct + 1) + " de " + plan.length + " ação=" + acao[plan[ct]] + "\n");
+//        System.out.println("--- Mente do Agente ---");
+//        System.out.println("  Estado atual  : " + estAtu.getLin() + "," + estAtu.getCol());
+//        System.out.println("  Passo do plano: " + (ct + 1) + " de " + plan.length + " ação=" + acao[plan[ct]] + "\n");
         float a;
         if(plan[ct] % 2 == 0){
             a = (float) 1.0;
@@ -105,13 +115,7 @@ public class Agente implements PontosCardeais {
             a = (float) 1.5;
         }
 
-        boolean emp = empurrar(1, estAtu.getLin(), estAtu.getCol());
-        if(emp){
-            System.out.println("empurra");
-        }
-        else{
-            System.out.println("nao empurra");
-        }
+        boolean emp = empurrar(type, estAtu.getLin(), estAtu.getCol());
         if(emp){
             if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
                 a *= 3;
@@ -129,7 +133,6 @@ public class Agente implements PontosCardeais {
             }
         }
         custo += a;
-        System.out.println("custo = " + a);
         executarIr(plan[ct]);
 
         // atualiza o estado atual baseando-se apenas nas suas crenças e
@@ -144,7 +147,6 @@ public class Agente implements PontosCardeais {
         if(func == 0){
             Random rand = new Random();
             int r = rand.nextInt(2);
-            System.out.println("rand = " + r);
             if(r == 1){
                 return true;
             }
@@ -298,17 +300,17 @@ public class Agente implements PontosCardeais {
         ArrayList<Estado> expl = new ArrayList<>(12);
 
         // estado na inicializacao da arvore de busca
-        System.out.println("\n*****\n***** INICIALIZACAO ARVORE DE BUSCA\n*****\n");
-        System.out.println("\nNós na árvore..............: " + ctNosArvore);
-        System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
-        System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
-        System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
+//        System.out.println("\n*****\n***** INICIALIZACAO ARVORE DE BUSCA\n*****\n");
+//        System.out.println("\nNós na árvore..............: " + ctNosArvore);
+//        System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
+//        System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
+//        System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
 
         while (!fronteira.isEmpty()) {
-            System.out.println("\n*****\n***** Inicio iteracao\n*****\n");
-            printFronteira(fronteira);
+//            System.out.println("\n*****\n***** Inicio iteracao\n*****\n");
+//            printFronteira(fronteira);
             TreeNode nSel = fronteira.remove(0);
-            System.out.println("   Selec. exp.: \n" + nSel.gerarStr() + "\n");
+//            System.out.println("   Selec. exp.: \n" + nSel.gerarStr() + "\n");
 
             // teste de objetivo
             if (nSel.getState().igualAo(this.prob.estObj)) {
@@ -317,7 +319,7 @@ public class Agente implements PontosCardeais {
                 break;
             }
             expl.add(nSel.getState()); // adiciona estado aos já explorados
-            printExplorados(expl);
+//            printExplorados(expl);
 
             // obtem acoes possiveis para o estado selecionado para expansão
             int acoes[] = prob.acoesPossiveis(nSel.getState());
@@ -409,10 +411,10 @@ public class Agente implements PontosCardeais {
                  */
             }
             //raiz.printSubTree();
-            System.out.println("\nNós na árvore..............: " + ctNosArvore);
-            System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
-            System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
-            System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
+//            System.out.println("\nNós na árvore..............: " + ctNosArvore);
+//            System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
+//            System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
+//            System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
             //System.out.println("Nós desprezados total..........: " + (ctNosDesprFront + ctNosDesprExpl));
             //System.out.println("Máx nós front..: " + maxNosFronteira);
             //System.out.println("Máx nós explor.: " + maxNosExplorados);
@@ -421,13 +423,13 @@ public class Agente implements PontosCardeais {
         // classifica a fronteira por 
         //Collections.sort(fronteira, new fnComparator());
         if (sol != null) {
-            System.out.println("!!! Solucao encontrada !!!");
-            System.out.println("!!! Custo: " + sol.getGn());
-            System.out.println("!!! Depth: " + sol.getDepth() + "\n");
-            System.out.println("\nNós na árvore..............: " + ctNosArvore);
-            System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
-            System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
-            System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
+//            System.out.println("!!! Solucao encontrada !!!");
+//            System.out.println("!!! Custo: " + sol.getGn());
+//            System.out.println("!!! Depth: " + sol.getDepth() + "\n");
+//            System.out.println("\nNós na árvore..............: " + ctNosArvore);
+//            System.out.println("Desprezados já na fronteira: " + ctNosDesprFront);
+//            System.out.println("Desprezados já explorados..: " + ctNosDesprExpl);
+//            System.out.println("Total de nós gerados.......: " + (ctNosArvore + ctNosDesprFront + ctNosDesprExpl));
             return montarPlano(sol);
         } else {
             System.out.println("### solucao NAO encontrada ###");
