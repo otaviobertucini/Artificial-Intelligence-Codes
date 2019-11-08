@@ -156,13 +156,13 @@ public class Agente implements PontosCardeais {
         //J48
         Oponente o = model.labir.getOponente(lin, col);
 
-        System.out.println(o.massa + "," + o.altura + "," + o.dente + "," + o.olhos + "," + o.gentil);
+//        System.out.println(o.massa + "," + o.altura + "," + o.dente + "," + o.olhos + "," + o.gentil);
 
         if(o.dente){
 
             //dente afiado
-            if(o.massa <= 99.99){
-                if(o.altura <= 1.79){
+            if(o.massa <= 99.57){
+                if(o.altura <= 1.81){
                     return true;
                 }
                 return false;
@@ -177,8 +177,8 @@ public class Agente implements PontosCardeais {
             if(o.olhos == 0 || o.olhos == 1){
                 return false;
             }
-            if(o.massa <= 100.06){
-                if(o.altura <= 1.8){
+            if(o.massa <= 100.25){
+                if(o.altura <= 1.82){
                     return true;
                 }
                 return false;
