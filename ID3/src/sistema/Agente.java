@@ -8,6 +8,8 @@ import comuns.*;
 import static comuns.PontosCardeais.*;
 import java.util.ArrayList;
 import java.util.Random;
+import net.sourceforge.jFuzzyLogic.FIS;
+//import net.sourceforge.jFuzzyLogic.rule.;
 
 /**
  *
@@ -132,6 +134,9 @@ public class Agente implements PontosCardeais {
                 a *= 1;
             }
         }
+
+        intensidade(estAtu.getLin(), estAtu.getCol());
+
         custo += a;
         executarIr(plan[ct]);
 
@@ -185,6 +190,21 @@ public class Agente implements PontosCardeais {
             }
             return true;
         }
+
+    }
+
+    public int intensidade(int lin, int col){
+
+        Oponente o = model.labir.getOponente(lin, col);
+
+        String fileName = "~/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl";
+        FIS fis = FIS.load(fileName, true);
+
+        if( fis == null){
+            System.out.println("Deu merda");
+        }
+
+        return 0;
 
     }
 
