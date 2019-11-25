@@ -197,11 +197,11 @@ public class Agente implements PontosCardeais {
 
         Oponente o = model.labir.getOponente(lin, col);
 
-        String fileName = "~/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl";
+        String fileName = "/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl";
         FIS fis = FIS.load(fileName, true);
 
         if( fis == null){
-            System.out.println("Deu merda");
+            System.out.println("Erro ao abrir arquivo!");
         }
 
         return 0;
