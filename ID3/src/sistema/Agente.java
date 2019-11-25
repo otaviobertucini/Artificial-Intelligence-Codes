@@ -129,6 +129,8 @@ public class Agente implements PontosCardeais {
         boolean emp = empurrar(type, estAtu.getLin(), estAtu.getCol());
         if(emp){
 
+            custo += intensidade(estAtu.getLin(), estAtu.getCol()) / 10;
+
             if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
                 a *= 3;
             }
@@ -144,8 +146,6 @@ public class Agente implements PontosCardeais {
                 a *= 1;
             }
         }
-
-        System.out.println("empurrei com intensidade: " + intensidade(estAtu.getLin(), estAtu.getCol()));
 
         custo += a;
         executarIr(plan[ct]);
@@ -207,8 +207,6 @@ public class Agente implements PontosCardeais {
     public double intensidade(int lin, int col){
 
         Oponente o = model.labir.getOponente(lin, col);
-
-//        FIS fis = FIS.load("/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl", true);
 
         if( fis == null){
             System.out.println("Erro ao abrir arquivo!");
