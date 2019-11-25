@@ -40,7 +40,7 @@ public class Main {
 
         BufferedWriter w = new BufferedWriter(new FileWriter("result.txt", true));
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 1; i++) {
 
             System.out.println("i = " + i);
 

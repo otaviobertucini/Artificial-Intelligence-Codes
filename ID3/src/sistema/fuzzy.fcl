@@ -1,2 +1,44 @@
 FUNCTION_BLOCK hitter
+
+VAR_INPUT
+	massa : REAL;
+	altura: REAL;
+END_VAR
+
+VAR_OUTPUT				
+	intensidade : REAL;
+END_VAR
+
+FUZZIFY massa			// Fuzzify input variable 'massa': {'pequeno', 'medio' , 'grande'}
+	TERM pequeno := (50, 1) (80, 1) (100, 0); 
+	TERM medio := (90, 0) (130, 1) (150, 0) ;
+	TERM grande := (140, 0) (160, 1) (180, 1);
+END_FUZZIFY
+
+FUZZIFY altura			// Fuzzify input variable 'altura': {'baixo', 'medio' , 'alto'}
+	TERM baixo := (1.5, 1) (1.6, 1) (1.8, 0); 
+	TERM medio := (1.70, 0) (1.8, 1) (1.95, 0) ;
+	TERM alto := (1.85, 0) (2.1, 1) (2.4, 1);
+END_FUZZIFY
+
+DEFUZZIFY intensidade			// Defuzzify output variable 'intensidade' : {'fraco', 'medio', 'forte' }
+	TERM fraco := (0,1) (20,1) (40,0);
+	TERM medio := (35,0) (50,1) (60,1) (70,0);
+	TERM forte := (60,0) (80.5,1) (100,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method
+	ACCU : MAX;			// Use 'max' accumulation method
+
+	RULE 1 : IF massa IS pequeno AND altura IS baixo THEN intensidade IS fraco;
+	RULE 2 : IF massa IS grande AND altura IS alto THEN intensidade IS forte;
+	RULE 3 : IF (massa IS grande OR altura IS alto) AND (massa IS pequeno OR altura IS baixo) THEN intensidade IS medio;	
+	RULE 4 : IF massa IS medio OR altura IS medio THEN intensidade IS medio;
+
+END_RULEBLOCK
+
 END_FUNCTION_BLOCK

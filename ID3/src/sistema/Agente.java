@@ -3,13 +3,15 @@ package sistema;
 import ambiente.*;
 import arvore.TreeNode;
 import arvore.fnComparator;
+import net.sourceforge.jFuzzyLogic.FunctionBlock;
+import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart;
 import problema.*;
 import comuns.*;
 import static comuns.PontosCardeais.*;
 import java.util.ArrayList;
 import java.util.Random;
 import net.sourceforge.jFuzzyLogic.FIS;
-//import net.sourceforge.jFuzzyLogic.rule.;
+//import net.sourceforge.jFuzzyLogic.*;
 
 /**
  *
@@ -24,6 +26,8 @@ public class Agente implements PontosCardeais {
     int plan[];
     public double custo = 0.0;
     static int ct = -1;
+    int count = 0;
+    FIS fis;
 
     public Agente(Model m) {
         this.model = m;
@@ -63,6 +67,11 @@ public class Agente implements PontosCardeais {
 
         custo = 0.0;
         ct = -1;
+
+        fis = FIS.load("/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl", true);
+
+//        FunctionBlock fb = fis.getFunctionBlock(null);
+//        JFuzzyChart.get().chart(fb);
 
     }
 
@@ -119,6 +128,7 @@ public class Agente implements PontosCardeais {
 
         boolean emp = empurrar(type, estAtu.getLin(), estAtu.getCol());
         if(emp){
+
             if(model.labir.isOponente(estAtu.getLin(), estAtu.getCol())){
                 a *= 3;
             }
@@ -135,10 +145,11 @@ public class Agente implements PontosCardeais {
             }
         }
 
-        intensidade(estAtu.getLin(), estAtu.getCol());
+        System.out.println("empurrei com intensidade: " + intensidade(estAtu.getLin(), estAtu.getCol()));
 
         custo += a;
         executarIr(plan[ct]);
+        count++;
 
         // atualiza o estado atual baseando-se apenas nas suas crenças e
         // na função sucessora (não faz leitura do sensor de posição!!!)
@@ -193,18 +204,23 @@ public class Agente implements PontosCardeais {
 
     }
 
-    public int intensidade(int lin, int col){
+    public double intensidade(int lin, int col){
 
         Oponente o = model.labir.getOponente(lin, col);
 
-        String fileName = "/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl";
-        FIS fis = FIS.load(fileName, true);
+//        FIS fis = FIS.load("/home/otavio/Documents/Sistemas_Inteligentes/ID3/src/sistema/fuzzy.fcl", true);
 
         if( fis == null){
             System.out.println("Erro ao abrir arquivo!");
+            return 0;
         }
 
-        return 0;
+        fis.setVariable("massa", o.massa);
+        fis.setVariable("altura", o.altura);
+
+        fis.evaluate();
+
+        return fis.getVariable("intensidade").getLatestDefuzzifiedValue();
 
     }
 
